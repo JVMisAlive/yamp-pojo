@@ -1,0 +1,7 @@
+#pane{
+    -fx-background-image: url("background_image.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 50%;
+    -fx-background-position: bottom right;
+    -fx-background-color: white;
+}
