@@ -1,4 +1,4 @@
-![Screenshot](src\main\resources\css\yojo.png "Title")
+![Screenshot](./src/main/resources/css/yojo.png)
 ### YOJO
 #### YAML to POJO generator 
 
