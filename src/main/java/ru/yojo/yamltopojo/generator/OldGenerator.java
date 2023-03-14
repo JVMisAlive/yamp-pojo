@@ -226,6 +226,7 @@ public class OldGenerator {
         //Write the annotation Pattern
         if (isNotBlank(pattern)) {
             stringBuilder.append(lineSeparator())
+                    .append(TABULATION.getValue())
                     .append(formatString(PATTERN_ANNOTATION, pattern));
 
             requiredImports.add(JAVA_TYPES_REQUIRED_IMPORTS.get(StringUtils.substringBefore(PATTERN_ANNOTATION.getValue(), "(")));
@@ -295,6 +296,7 @@ public class OldGenerator {
     private void fillArrayWithRequiredAttributes(StringBuilder stringBuilder, String variableName, Map<String, Object> variableProperties, Set<String> requiredImports, Set<String> gettersAndSetters) {
         String item = refReplace(variableProperties.get(ITEMS.getValue()).toString().replaceFirst(".$", ""));
         stringBuilder.append(lineSeparator())
+                .append(TABULATION.getValue())
                 .append(NOT_EMPTY_ANNOTATION.getValue());
         generateValidAnnotation(stringBuilder);
         stringBuilder.append(lineSeparator())

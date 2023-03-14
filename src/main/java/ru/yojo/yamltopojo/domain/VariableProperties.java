@@ -112,6 +112,7 @@ public class VariableProperties {
         generateJavaDoc(stringBuilder, description, enumeration, example);
         annotationSet.forEach(annotation -> {
             stringBuilder.append(lineSeparator())
+                    .append(TABULATION.getValue())
                     .append(annotation);
         });
         return stringBuilder.append(lineSeparator())

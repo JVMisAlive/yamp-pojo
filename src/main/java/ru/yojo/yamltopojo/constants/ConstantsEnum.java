@@ -7,6 +7,8 @@ import static java.lang.System.lineSeparator;
 
 public enum ConstantsEnum {
 
+    TABULATION("    "),
+
     /**
      * Attributes Yaml
      */
@@ -28,13 +30,16 @@ public enum ConstantsEnum {
     /**
      * Annotations
      */
-    NOT_EMPTY_ANNOTATION("    @NotEmpty"),
-    NOT_NULL_ANNOTATION("    @NotNull"),
-    SIZE_MIN_MAX_ANNOTATION("    @Size(min = %s, max = %s)"),
-    SIZE_MAX_ANNOTATION("    @Size(max = %s)"),
-    SIZE_MIN_ANNOTATION("    @Size(min = %s)"),
-    PATTERN_ANNOTATION("    @Pattern(regexp = \"%s\")"),
-    VALID_ANNOTATION("    @Valid"),
+    NOT_EMPTY_ANNOTATION("@NotEmpty"),
+    NOT_NULL_ANNOTATION("@NotNull"),
+    NOT_BLANK_ANNOTATION("@NotBlank"),
+    SIZE_ANNOTATION("@Size"),
+    SIZE_MIN_MAX_ANNOTATION("@Size(min = %s, max = %s)"),
+    SIZE_MAX_ANNOTATION("@Size(max = %s)"),
+    SIZE_MIN_ANNOTATION("@Size(min = %s)"),
+    PATTERN_ANNOTATION("@Pattern(regexp = \"%s\")"),
+    PATTERN_ANNOTATION_WITHOUT_REGEXP("@Pattern"),
+    VALID_ANNOTATION("@Valid"),
 
     /**
      * Lombok annotations
@@ -47,17 +52,24 @@ public enum ConstantsEnum {
     /**
      * Lombok imports
      */
-    LOMBOK_ALL_ARGS_CONSTRUCTOR_IMPORT("import lombok.AllArgsConstructor;"),
-    LOMBOK_NO_ARGS_CONSTRUCTOR_IMPORT("import lombok.NoArgsConstructor;"),
-    LOMBOK_DATA_IMPORT("import lombok.Data;"),
-    LOMBOK_ACCESSORS_IMPORT("import lombok.experimental.Accessors;"),
+    LOMBOK_ALL_ARGS_CONSTRUCTOR_IMPORT("lombok.AllArgsConstructor;"),
+    LOMBOK_NO_ARGS_CONSTRUCTOR_IMPORT("lombok.NoArgsConstructor;"),
+    LOMBOK_DATA_IMPORT("lombok.Data;"),
+    LOMBOK_ACCESSORS_IMPORT("lombok.experimental.Accessors;"),
 
     /**
      * Other
      */
+    IMPORT("import "),
     LOCAL_DATE("LocalDate"),
-    LOCAL_DATE_IMPORT("import java.time.LocalDate;"),
-    LIST_IMPORT("import java.util.List;"),
+    LOCAL_DATE_IMPORT("java.time.LocalDate;"),
+    NOT_BLANK_IMPORT("javax.validation.constrains.NotBlank;"),
+    NOT_EMPTY_IMPORT("javax.validation.constrains.NotEmpty;"),
+    NOT_NULL_IMPORT("javax.validation.constrains.NotNull;"),
+    SIZE_IMPORT("javax.validation.constrains.Size;"),
+    PATTERN_IMPORT("javax.validation.constrains.Pattern;"),
+    VALID_IMPORT("javax.validation.Valid;"),
+    LIST_IMPORT("java.util.List;"),
     ARRAY_LIST("    private List<%s> %s;"),
     FIELD("    private %s %s;"),
 
@@ -85,19 +97,19 @@ public enum ConstantsEnum {
     }
 
     public static final Map<String, String> JAVA_TYPES_REQUIRED_ANNOTATIONS = Map.of(
-            "String", "    @NotBlank",
-            "Integer", "    @NotNull",
-            "Boolean", "    @NotNull",
-            "LocalDate", "    @NotNull",
-            "Object", "    @NotNull");
+            "String", NOT_BLANK_ANNOTATION.getValue(),
+            "Integer", NOT_NULL_ANNOTATION.getValue(),
+            "Boolean", NOT_NULL_ANNOTATION.getValue(),
+            "LocalDate", NOT_NULL_ANNOTATION.getValue(),
+            "Object", NOT_NULL_ANNOTATION.getValue());
 
     public static final Map<String, String> JAVA_TYPES_REQUIRED_IMPORTS = Map.of(
-            "    @NotBlank", "import javax.validation.constrains.NotBlank;",
-            "    @NotEmpty", "import javax.validation.constrains.NotEmpty;",
-            "    @NotNull", "import javax.validation.constrains.NotNull;",
-            "    @Size", "import javax.validation.constrains.Size;",
-            "    @Pattern", "import javax.validation.constrains.Pattern;",
-            "    @Valid", "import javax.validation.Valid;");
+            NOT_BLANK_ANNOTATION.getValue(), NOT_BLANK_IMPORT.getValue(),
+            NOT_EMPTY_ANNOTATION.getValue(), NOT_EMPTY_IMPORT.getValue(),
+            NOT_NULL_ANNOTATION.getValue(), NOT_NULL_IMPORT.getValue(),
+            SIZE_ANNOTATION.getValue(), SIZE_IMPORT.getValue(),
+            PATTERN_ANNOTATION_WITHOUT_REGEXP.getValue(), PATTERN_IMPORT.getValue(),
+            VALID_ANNOTATION.getValue(), VALID_IMPORT.getValue());
 
     public static final List<String> JAVA_DEFAULT_TYPES = List.of(
             "String", "Integer", "Long", "Boolean", "BigDecimal", "LocalDate"

@@ -40,36 +40,30 @@ public class Schema {
                 .append(lineSeparator());
 
         Set<String> requiredImports = new HashSet<>();
-        StringBuilder lombokBuilder = new StringBuilder();
+        StringBuilder lombokAnnotationBuilder = new StringBuilder();
 
         if (lombokProperties.enableLombok()) {
-            lombokBuilder
+            lombokAnnotationBuilder
                     .append(LOMBOK_DATA_ANNOTATION.getValue())
                     .append(lineSeparator())
                     .append(LOMBOK_NO_ARGS_CONSTRUCTOR_ANNOTATION.getValue())
                     .append(lineSeparator());
             requiredImports.addAll(List.of(LOMBOK_DATA_IMPORT.getValue(), LOMBOK_NO_ARGS_CONSTRUCTOR_IMPORT.getValue()));
             if (lombokProperties.accessors()) {
-                lombokBuilder.append(LOMBOK_ACCESSORS_ANNOTATION.getValue())
+                lombokAnnotationBuilder.append(LOMBOK_ACCESSORS_ANNOTATION.getValue())
                         .append(lineSeparator());
                 requiredImports.add(LOMBOK_ACCESSORS_IMPORT.getValue());
             }
             if (lombokProperties.allArgsConstructor()) {
-                lombokBuilder.append(LOMBOK_ALL_ARGS_CONSTRUCTOR_ANNOTATION.getValue())
+                lombokAnnotationBuilder.append(LOMBOK_ALL_ARGS_CONSTRUCTOR_ANNOTATION.getValue())
                         .append(lineSeparator());
                 requiredImports.add(LOMBOK_ALL_ARGS_CONSTRUCTOR_IMPORT.getValue());
             }
         }
 
-        stringBuilder.insert(0, lombokBuilder);
-        lombokBuilder.insert(0, lineSeparator());
-
         schemaProperties.getVariableProperties().stream()
                 .flatMap(variableProperties -> {
                     Set<String> i = variableProperties.getRequiredImports();
-                    if (!requiredImports.isEmpty()) {
-                        i.addAll(requiredImports);
-                    }
                     if (!lombokProperties.enableLombok()) {
                         stringBuilder
                                 .append(lineSeparator())
@@ -78,13 +72,17 @@ public class Schema {
                                 .append(generateGetter(variableProperties.getType(), variableProperties.getName()));
                     }
                     return i.stream();
-                }).forEach(
-                        importString -> {
-                            StringBuilder importBuilder = new StringBuilder();
-                            importBuilder.append(importString).append(lineSeparator());
-                            stringBuilder.insert(0, importBuilder);
-                        }
-                );
+                }).forEach(requiredImports::add);
+
+        stringBuilder.insert(0, lombokAnnotationBuilder);
+
+        StringBuilder importBuilder = new StringBuilder();
+        requiredImports.forEach(requiredImport -> importBuilder
+                .append(IMPORT.getValue())
+                .append(requiredImport)
+                .append(lineSeparator()));
+        stringBuilder.insert(0, importBuilder.append(lineSeparator()));
+        
         return stringBuilder
                 .append(lineSeparator())
                 .append("}")
