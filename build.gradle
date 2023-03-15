@@ -3,7 +3,6 @@ plugins {
     id 'application'
     id 'org.springframework.boot' version '2.6.3'
     id 'org.openjfx.javafxplugin' version '0.0.13'
-    id 'org.beryx.jlink' version '2.25.0'
 }
 
 group 'ru.yojo'
@@ -26,25 +25,28 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'ru.yojo.yamltopojo'
-    mainClass = 'ru.yojo.yamltopojo.YojoDesktop'
+    mainClass = 'ru.yojo.yamltopojo.SpringApplication'
 }
 
 javafx {
     version = '17.0.2'
     modules = ['javafx.controls', 'javafx.fxml']
 }
+mainClassName = "ru.yojo.yamltopojo.SpringApplication"
 
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+    zip64 = true
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+        duplicatesStrategy(DuplicatesStrategy.INCLUDE)
+    }
+}
 dependencies {
     implementation 'org.yaml:snakeyaml:2.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.springframework.boot:spring-boot-starter:3.0.4'
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-}
-
-test {
-    useJUnitPlatform()
 }
