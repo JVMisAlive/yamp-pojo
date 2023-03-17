@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -17,6 +18,7 @@ import static ru.yojo.yamltopojo.constants.ConstantsEnum.*;
 import static ru.yojo.yamltopojo.constants.ConstantsEnum.JAVA_DOC_END;
 import static ru.yojo.yamltopojo.util.MapperUtil.*;
 
+@SuppressWarnings("all")
 public class OldGenerator {
     //StringBuilderOnly generator
     private void generateAndWriteToFile(String outputDirectory, LombokProperties lombokProperties, Map<String, Object> schemasMap, String schema, Object schemaValues) {
@@ -167,8 +169,8 @@ public class OldGenerator {
             requiredImports.add(JAVA_TYPES_REQUIRED_IMPORTS.get(VALID_ANNOTATION.getValue()));
             requiredImports.add(LIST_IMPORT.getValue());
 
-            gettersAndSetters.add(generateGetter(LIST_TYPE.getValue().formatted(item), variableName));
-            gettersAndSetters.add(generateSetter(LIST_TYPE.getValue().formatted(item), variableName));
+            gettersAndSetters.add(generateGetter(format(LIST_TYPE.getValue(), item), variableName));
+            gettersAndSetters.add(generateSetter(format(LIST_TYPE.getValue(), item), variableName));
         }
 
         //Write the variable itself with a private modifier
@@ -307,8 +309,8 @@ public class OldGenerator {
         requiredImports.add(JAVA_TYPES_REQUIRED_IMPORTS.get(VALID_ANNOTATION.getValue()));
         requiredImports.add(LIST_IMPORT.getValue());
 
-        gettersAndSetters.add(generateGetter(LIST_TYPE.getValue().formatted(item), variableName));
-        gettersAndSetters.add(generateSetter(LIST_TYPE.getValue().formatted(item), variableName));
+        gettersAndSetters.add(generateGetter(format(LIST_TYPE.getValue(), item), variableName));
+        gettersAndSetters.add(generateSetter(format(LIST_TYPE.getValue(), item), variableName));
     }
 
     private static String getVariablePropertyIfExistsOrElseNull(Map<String, Object> variableProperties, ConstantsEnum valueEnum) {

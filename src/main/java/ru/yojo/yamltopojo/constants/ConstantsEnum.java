@@ -117,6 +117,6 @@ public enum ConstantsEnum {
     private final String value;
 
     public static String formatString(ConstantsEnum constantsEnum, Object... strings) {
-        return constantsEnum.getValue().formatted(strings);
+        return String.format(constantsEnum.getValue(), strings);
     }
 }

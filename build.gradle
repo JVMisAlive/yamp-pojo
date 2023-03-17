@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.springframework.boot' version '2.6.3'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 group 'ru.yojo'
@@ -16,8 +16,8 @@ ext {
     junitVersion = '5.8.2'
 }
 
-sourceCompatibility = '17'
-targetCompatibility = '17'
+sourceCompatibility = '11'
+targetCompatibility = '11'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -27,9 +27,8 @@ application {
     mainModule = 'ru.yojo.yamltopojo'
     mainClass = 'ru.yojo.yamltopojo.SpringApplication'
 }
-
 javafx {
-    version = '17.0.2'
+    version = '15.0.1'
     modules = ['javafx.controls', 'javafx.fxml']
 }
 mainClassName = "ru.yojo.yamltopojo.SpringApplication"
@@ -45,8 +44,7 @@ jar {
     }
 }
 dependencies {
-    implementation 'org.yaml:snakeyaml:2.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.springframework.boot:spring-boot-starter:3.0.4'
+    implementation 'org.springframework.boot:spring-boot-starter:2.6.3'
 }

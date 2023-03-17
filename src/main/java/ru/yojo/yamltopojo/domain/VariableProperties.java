@@ -10,6 +10,7 @@ import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static ru.yojo.yamltopojo.constants.ConstantsEnum.*;
 
+@SuppressWarnings("all")
 public class VariableProperties {
 
     private String name;
@@ -62,7 +63,7 @@ public class VariableProperties {
 
     public void setPattern(String pattern) {
         if (pattern != null) {
-            annotationSet.add(PATTERN_ANNOTATION.getValue().formatted(pattern));
+            annotationSet.add(String.format(PATTERN_ANNOTATION.getValue(), pattern));
             requiredImports.add(JAVA_TYPES_REQUIRED_IMPORTS.get(StringUtils.substringBefore(PATTERN_ANNOTATION.getValue(), "(")));
         }
         this.pattern = pattern;

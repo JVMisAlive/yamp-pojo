@@ -1,7 +1,6 @@
 package ru.yojo.yamltopojo.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.yojo.yamltopojo.constants.ConstantsEnum;
 import ru.yojo.yamltopojo.domain.LombokProperties;
 import ru.yojo.yamltopojo.domain.Schema;
 import ru.yojo.yamltopojo.domain.SchemaProperties;
@@ -60,7 +59,7 @@ public class SchemaMapper {
 
         if (ARRAY.getValue().equals(uncapitalize(variableProperties.getType()))) {
             variableProperties.setItems(refReplace(propertiesMap.get(ITEMS.getValue()).toString().replaceFirst(".$", "")));
-            variableProperties.setType(refReplace(LIST_TYPE.getValue()).formatted(variableProperties.getItems()));
+            variableProperties.setType(String.format(refReplace(LIST_TYPE.getValue()), variableProperties.getItems()));
         } else if (getStringValueIfExistOrElseNull(REFERENCE, propertiesMap) != null && !ARRAY.getValue().equals(uncapitalize(variableProperties.getType()))) {
             String referenceObject = propertiesMap.get(REFERENCE.getValue()).toString();
             Map<String, Object> stringObjectMap = castObjectToMap(schemas.get(referenceObject.replaceAll(".+/", "")));

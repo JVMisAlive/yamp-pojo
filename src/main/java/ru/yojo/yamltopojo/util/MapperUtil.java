@@ -11,6 +11,7 @@ import static java.lang.System.lineSeparator;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static ru.yojo.yamltopojo.constants.ConstantsEnum.*;
 
+@SuppressWarnings("all")
 public class MapperUtil {
 
     public static Set<String> getSetValueIfExistsOrElseEmptySet(String value, Map<String, Object> schemaMap) {
@@ -37,11 +38,11 @@ public class MapperUtil {
     }
 
     public static String generateSetter(String type, String variableName) {
-        return SETTER.getValue().formatted(capitalize(variableName), capitalize(type), variableName, variableName, variableName);
+        return String.format(SETTER.getValue(), capitalize(variableName), capitalize(type), variableName, variableName, variableName);
     }
 
     public static String generateGetter(String type, String variableName) {
-        return GETTER.getValue().formatted(capitalize(type), capitalize(variableName), variableName);
+        return String.format(GETTER.getValue(), capitalize(type), capitalize(variableName), variableName);
     }
 
     public static void generateValidAnnotation(StringBuilder stringBuilder) {
