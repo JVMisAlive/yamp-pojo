@@ -5,11 +5,14 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
-group 'ru.yojo'
+group 'ru.yojo.yamltopojo'
 version '0.0.1'
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
 }
 
 ext {
@@ -43,8 +46,13 @@ jar {
         duplicatesStrategy(DuplicatesStrategy.INCLUDE)
     }
 }
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.springframework.boot:spring-boot-starter:2.6.3'
+    implementation 'com.github.JVMisAlive:yojo-generator:0.0.1'
 }
