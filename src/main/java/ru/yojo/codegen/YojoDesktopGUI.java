@@ -1,4 +1,4 @@
-package ru.yojo.yamltopojo;
+package ru.yojo.codegen;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -16,15 +16,15 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-import ru.yojo.yamltopojo.YojoApplication.StageReadyEvent;
-import ru.yojo.yamltopojo.domain.LombokProperties;
-import ru.yojo.yamltopojo.generator.YojoGenerator;
-import ru.yojo.yamltopojo.mapper.SchemaMapper;
-
+import ru.yojo.codegen.domain.LombokProperties;
+import ru.yojo.codegen.generator.YojoGenerator;
+import ru.yojo.codegen.mapper.MessageMapper;
+import ru.yojo.codegen.mapper.SchemaMapper;
 import java.io.File;
 
-import static ru.yojo.yamltopojo.constants.ConstantsEnum.LOMBOK_ACCESSORS_ANNOTATION;
-import static ru.yojo.yamltopojo.constants.ConstantsEnum.LOMBOK_ALL_ARGS_CONSTRUCTOR_ANNOTATION;
+
+import static ru.yojo.codegen.constants.ConstantsEnum.LOMBOK_ACCESSORS_ANNOTATION;
+import static ru.yojo.codegen.constants.ConstantsEnum.LOMBOK_ALL_ARGS_CONSTRUCTOR_ANNOTATION;
 
 /**
  * Desktop version of POJO generator
@@ -34,16 +34,18 @@ import static ru.yojo.yamltopojo.constants.ConstantsEnum.LOMBOK_ALL_ARGS_CONSTRU
  */
 
 @Component
-public class YojoDesktopGUI implements ApplicationListener<StageReadyEvent> {
+public class YojoDesktopGUI implements ApplicationListener<YojoApplication.StageReadyEvent> {
 
     private final SchemaMapper schemaMapper;
+    private final MessageMapper messageMapper;
 
-    public YojoDesktopGUI(SchemaMapper schemaMapper) {
+    public YojoDesktopGUI(SchemaMapper schemaMapper, MessageMapper messageMapper) {
         this.schemaMapper = schemaMapper;
+        this.messageMapper = messageMapper;
     }
 
     @Override
-    public void onApplicationEvent(StageReadyEvent stageReadyEvent) {
+    public void onApplicationEvent(YojoApplication.StageReadyEvent stageReadyEvent) {
         Stage stage = stageReadyEvent.getStage();
         final FileChooser fileChooser = new FileChooser();
         final DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -115,10 +117,14 @@ public class YojoDesktopGUI implements ApplicationListener<StageReadyEvent> {
             boolean addAllArgs = allArgsConstructor.selectedProperty().get();
             boolean addAccessors = accessors.selectedProperty().get();
             if (StringUtils.isNotBlank(directoryPath) && StringUtils.isNotBlank(filePath)) {
-                YojoGenerator yamlToPojo = new YojoGenerator(schemaMapper);
-                yamlToPojo.generate(filePath.replace("\\", "/"),
+                YojoGenerator yamlToPojo = new YojoGenerator(schemaMapper, messageMapper);
+                yamlToPojo.generate(
+                        filePath.replace("\\", "/"),
                         directoryPath.replace("\\", "/"),
-                        new LombokProperties(enableLombok, addAllArgs, addAccessors));
+                        null,
+                        new LombokProperties(enableLombok, addAllArgs,
+                                new LombokProperties.Accessors(addAccessors, addAccessors, addAccessors)),
+                        null);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("YOJO");
                 alert.setHeaderText("Java classes is generated!");

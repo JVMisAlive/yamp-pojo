@@ -199,7 +199,7 @@ public class SaveGoodsResponse {
 
 }
 ```
-See examples [here](./examples)
+See examples [here](./api_specification)
 
 ## Releases
 ### 💥 Release 0.1.0:

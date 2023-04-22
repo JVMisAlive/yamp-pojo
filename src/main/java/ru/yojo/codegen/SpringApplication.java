@@ -1,4 +1,4 @@
-package ru.yojo.yamltopojo;
+package ru.yojo.codegen;
 
 import javafx.application.Application;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
