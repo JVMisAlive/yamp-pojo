@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -20,11 +21,10 @@ import ru.yojo.codegen.domain.LombokProperties;
 import ru.yojo.codegen.generator.YojoGenerator;
 import ru.yojo.codegen.mapper.MessageMapper;
 import ru.yojo.codegen.mapper.SchemaMapper;
+
 import java.io.File;
 
-
-import static ru.yojo.codegen.constants.ConstantsEnum.LOMBOK_ACCESSORS_ANNOTATION;
-import static ru.yojo.codegen.constants.ConstantsEnum.LOMBOK_ALL_ARGS_CONSTRUCTOR_ANNOTATION;
+import static ru.yojo.codegen.constants.ConstantsEnum.*;
 
 /**
  * Desktop version of POJO generator
@@ -54,10 +54,17 @@ public class YojoDesktopGUI implements ApplicationListener<YojoApplication.Stage
         configuringFileChooser(fileChooser);
 
         TextField directoryTextArea = new TextField();
+        directoryTextArea.promptTextProperty().set("Input directory");
         directoryTextArea.setMinHeight(30);
         directoryTextArea.setMaxHeight(30);
 
         TextField fileTextArea = new TextField();
+        fileTextArea.promptTextProperty().set("Choose file");
+        fileTextArea.setMinHeight(30);
+        fileTextArea.setMaxHeight(30);
+
+        TextField packageTextArea = new TextField();
+        packageTextArea.promptTextProperty().set("Input package to generate");
         fileTextArea.setMinHeight(30);
         fileTextArea.setMaxHeight(30);
 
@@ -73,11 +80,17 @@ public class YojoDesktopGUI implements ApplicationListener<YojoApplication.Stage
         lombok.setVisible(true);
         CheckBox allArgsConstructor = new CheckBox(LOMBOK_ALL_ARGS_CONSTRUCTOR_ANNOTATION.getValue());
         allArgsConstructor.setFont(new Font("System Bold", 12));
-        CheckBox accessors = new CheckBox(LOMBOK_ACCESSORS_ANNOTATION.getValue());
+        CheckBox accessors = new CheckBox(LOMBOK_ACCESSORS_EMPTY_ANNOTATION.getValue());
+        CheckBox accessorFluent = new CheckBox(LOMBOK_ACCESSORS_FLUENT_ANNOTATION.getValue());
+        CheckBox accessorChain = new CheckBox(LOMBOK_ACCESSORS_CHAIN_ANNOTATION.getValue());
         accessors.setFont(new Font("System Bold", 12));
+        accessorFluent.setFont(new Font("System Bold", 12));
+        accessorChain.setFont(new Font("System Bold", 12));
 
         allArgsConstructor.setVisible(false);
         accessors.setVisible(false);
+        accessorFluent.setVisible(false);
+        accessorChain.setVisible(false);
 
         lombok.setOnAction(event -> {
             if (lombok.isSelected()) {
@@ -88,6 +101,17 @@ public class YojoDesktopGUI implements ApplicationListener<YojoApplication.Stage
                 allArgsConstructor.setSelected(false);
                 accessors.setVisible(false);
                 accessors.setSelected(false);
+                accessorFluent.setVisible(false);
+                accessorFluent.setSelected(false);
+                accessorChain.setVisible(false);
+                accessorChain.setSelected(false);
+            }
+        });
+
+        accessors.setOnAction(event -> {
+            if (accessors.isSelected()) {
+                accessorFluent.setVisible(true);
+                accessorChain.setVisible(true);
             }
         });
 
@@ -113,18 +137,20 @@ public class YojoDesktopGUI implements ApplicationListener<YojoApplication.Stage
         generateClassesButton.setOnAction(event -> {
             String directoryPath = directoryTextArea.getText();
             String filePath = fileTextArea.getText();
+            String packagePath = packageTextArea.getText();
             boolean enableLombok = lombok.selectedProperty().get();
             boolean addAllArgs = allArgsConstructor.selectedProperty().get();
             boolean addAccessors = accessors.selectedProperty().get();
+            boolean addFluent = accessorFluent.selectedProperty().get();
+            boolean addChain = accessorChain.selectedProperty().get();
             if (StringUtils.isNotBlank(directoryPath) && StringUtils.isNotBlank(filePath)) {
                 YojoGenerator yamlToPojo = new YojoGenerator(schemaMapper, messageMapper);
                 yamlToPojo.generate(
                         filePath.replace("\\", "/"),
                         directoryPath.replace("\\", "/"),
-                        null,
+                        packagePath,
                         new LombokProperties(enableLombok, addAllArgs,
-                                new LombokProperties.Accessors(addAccessors, addAccessors, addAccessors)),
-                        null);
+                                new LombokProperties.Accessors(addAccessors, addFluent, addChain)));
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("YOJO");
                 alert.setHeaderText("Java classes is generated!");
@@ -146,6 +172,12 @@ public class YojoDesktopGUI implements ApplicationListener<YojoApplication.Stage
         lombokBox.getChildren().add(allArgsConstructor);
         lombokBox.getChildren().add(accessors);
 
+        HBox accessorsBox = new HBox();
+        accessorsBox.setSpacing(8);
+        accessorsBox.setPadding(new Insets(5));
+        lombokBox.getChildren().add(accessorChain);
+        lombokBox.getChildren().add(accessorFluent);
+
         HBox generateButtonBox = new HBox();
         generateButtonBox.setSpacing(8);
         generateButtonBox.setPadding(new Insets(20, 0, 0, 0));
@@ -157,12 +189,13 @@ public class YojoDesktopGUI implements ApplicationListener<YojoApplication.Stage
 
         root.getChildren().addAll(fileTextArea, selectFileButton);
         root.getChildren().addAll(directoryTextArea, selectDirectoryButton);
+        root.getChildren().add(packageTextArea);
         root.getChildren().add(lombokBox);
         root.getChildren().add(generateButtonBox);
 
         root.setId("pane");
 
-        Scene scene = new Scene(root, 600, 300);
+        Scene scene = new Scene(root, 800, 500);
         scene.getStylesheets().addAll("css/style.css");
         stage.setTitle("YOJO");
         stage.setScene(scene);

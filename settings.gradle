@@ -1,7 +1,11 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven { url 'https://jitpack.io' }
+//        Local
+//        maven { url 'C:/Users/VMorozkin/IdeaProjects/github/yojo-gradle-plugin/build/repo/' }
+//        Remote
+//        maven { url = uri("https://maven.pkg.github.com/yojo-generator/gradle-plugin") }
+        maven {url = uri("https://maven.pkg.github.com/yojo-generator/generator")}
     }
 //    resolutionStrategy {
 //        eachPlugin {
